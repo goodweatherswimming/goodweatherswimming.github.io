@@ -15,6 +15,7 @@ const WEATHER_REQUEST_TIMEOUT_MS = 10_000;
 const WEATHER_MAX_ATTEMPTS = 2;
 const WEATHER_RETRY_DELAY_MS = 2_000;
 const WEATHER_MAX_RETRY_AFTER_MS = 15_000;
+const DANGEROUS_WEATHER_CODES = new Set([45, 48, 56, 57, 65, 66, 67, 75, 82, 86, 95, 96, 99]);
 
 let weatherRequestQueue = Promise.resolve();
 let lastWeatherRequestStartedAt = 0;
@@ -22,16 +23,12 @@ let lastWeatherRequestStartedAt = 0;
 const RATING_THRESHOLDS = {
   Ideal: {
     minWaterTemp: 18,
-    maxWaveHeight: 0.5,
-    maxWindSpeed: 8,
-    maxPrecipProb: 30,
+    maxWindWaveHeight: 0.3,
     maxUVIndex: 3
   },
   OK: {
     minWaterTemp: 18,
-    maxWaveHeight: 1,
-    maxWindSpeed: 10,
-    maxPrecipProb: 50,
+    maxWindWaveHeight: 0.7,
     maxUVIndex: 5
   }
 };
@@ -66,7 +63,7 @@ function uidFor(locationId, start) {
 }
 
 function openMeteoMarineUrl(latitude, longitude) {
-  return `https://marine-api.open-meteo.com/v1/marine?latitude=${latitude}&longitude=${longitude}&hourly=wave_height,wave_period,sea_surface_temperature&timezone=UTC`;
+  return `https://marine-api.open-meteo.com/v1/marine?latitude=${latitude}&longitude=${longitude}&hourly=wave_height,wind_wave_height,wave_period,sea_surface_temperature&timezone=UTC`;
 }
 
 function fetchJSON(url) {
@@ -178,12 +175,11 @@ function describeWeatherCode(code) {
 function meetsRatingThresholds(sample, thresholds) {
   return sample.waterTemp >= thresholds.minWaterTemp
     && sample.uvIndex <= thresholds.maxUVIndex
-    && sample.waveHeight <= thresholds.maxWaveHeight
-    && sample.windSpeed <= thresholds.maxWindSpeed
-    && sample.precipProbability <= thresholds.maxPrecipProb;
+    && sample.windWaveHeight <= thresholds.maxWindWaveHeight;
 }
 
 function rateConditions(sample) {
+  if (DANGEROUS_WEATHER_CODES.has(sample.weatherCode)) return 'Poor';
   if (meetsRatingThresholds(sample, RATING_THRESHOLDS.Ideal)) return 'Ideal';
   if (meetsRatingThresholds(sample, RATING_THRESHOLDS.OK)) return 'OK';
   return 'Poor';
@@ -219,19 +215,18 @@ function findSwimWindows(air, marine) {
       airTemp: hourlyValue(air.hourly, index, 'temperature_2m'),
       windSpeed: hourlyValue(air.hourly, index, 'wind_speed_10m'),
       windDirection: hourlyValue(air.hourly, index, 'wind_direction_10m'),
-      precipProbability: hourlyValue(air.hourly, index, 'precipitation_probability'),
       weatherCode: hourlyValue(air.hourly, index, 'weathercode'),
       uvIndex: hourlyValue(air.hourly, index, 'uv_index'),
       waterTemp: hourlyValue(marine.hourly, marineIndex, 'sea_surface_temperature'),
       waveHeight: hourlyValue(marine.hourly, marineIndex, 'wave_height'),
+      windWaveHeight: hourlyValue(marine.hourly, marineIndex, 'wind_wave_height'),
       wavePeriod: hourlyValue(marine.hourly, marineIndex, 'wave_period')
     };
     const hasRequiredData = sample && [
       sample.waterTemp,
       sample.uvIndex,
-      sample.waveHeight,
-      sample.windSpeed,
-      sample.precipProbability
+      sample.windWaveHeight,
+      sample.weatherCode
     ].every(Number.isFinite);
     if (!hasRequiredData || !isDaylight) {
       finishWindow();
@@ -273,7 +268,7 @@ function createSwimEvent(location, window) {
     const windDirection = Number.isFinite(sample.windDirection)
       ? ` from ${Math.round(sample.windDirection)}°`
       : '';
-    return `${formatLocalTime(sample.start)}: ${describeWeatherCode(sample.weatherCode)}; air ${formatValue(sample.airTemp)}°C; water ${formatValue(sample.waterTemp)}°C; UV ${formatValue(sample.uvIndex)}; waves ${formatValue(sample.waveHeight)} m / ${formatValue(sample.wavePeriod)} s; wind ${formatValue(sample.windSpeed)} m/s${windDirection}; rain chance ${formatValue(sample.precipProbability, 0)}%.`;
+    return `${formatLocalTime(sample.start)}: ${describeWeatherCode(sample.weatherCode)}; air ${formatValue(sample.airTemp)}°C; water ${formatValue(sample.waterTemp)}°C; UV ${formatValue(sample.uvIndex)}; wind waves ${formatValue(sample.windWaveHeight)} m; total waves ${formatValue(sample.waveHeight)} m / ${formatValue(sample.wavePeriod)} s; wind ${formatValue(sample.windSpeed)} m/s${windDirection}.`;
   });
 
   return {
@@ -286,14 +281,15 @@ function createSwimEvent(location, window) {
     description: [
       `Rating: ${window.rating}${window.rating === 'Poor' ? ' - not recommended for swimming' : ''}.`,
       `Daylight: ${formatLocalTime(window.sunrise)} sunrise to ${formatLocalTime(window.sunset)} sunset (Cyprus time).`,
-      `Ideal limits: water at least ${RATING_THRESHOLDS.Ideal.minWaterTemp}°C, UV up to ${RATING_THRESHOLDS.Ideal.maxUVIndex}, waves up to ${RATING_THRESHOLDS.Ideal.maxWaveHeight} m, wind up to ${RATING_THRESHOLDS.Ideal.maxWindSpeed} m/s, rain chance up to ${RATING_THRESHOLDS.Ideal.maxPrecipProb}%.`,
-      `OK limits: water at least ${RATING_THRESHOLDS.OK.minWaterTemp}°C, UV up to ${RATING_THRESHOLDS.OK.maxUVIndex}, waves up to ${RATING_THRESHOLDS.OK.maxWaveHeight} m, wind up to ${RATING_THRESHOLDS.OK.maxWindSpeed} m/s, rain chance up to ${RATING_THRESHOLDS.OK.maxPrecipProb}%.`,
+      `Ideal limits: water at least ${RATING_THRESHOLDS.Ideal.minWaterTemp}°C, UV up to ${RATING_THRESHOLDS.Ideal.maxUVIndex}, wind waves up to ${RATING_THRESHOLDS.Ideal.maxWindWaveHeight} m.`,
+      `OK limits: water at least ${RATING_THRESHOLDS.OK.minWaterTemp}°C, UV up to ${RATING_THRESHOLDS.OK.maxUVIndex}, wind waves up to ${RATING_THRESHOLDS.OK.maxWindWaveHeight} m.`,
+      'Thunderstorms, heavy or freezing precipitation, heavy snow and fog are always rated Poor.',
       `Water temperature: ${formatValue(minOf('waterTemp'))}-${formatValue(maxOf('waterTemp'))}°C.`,
       `UV index: up to ${formatValue(maxOf('uvIndex'))}.`,
-      `Wave height: up to ${formatValue(maxOf('waveHeight'))} m.`,
+      `Wind-wave height: up to ${formatValue(maxOf('windWaveHeight'))} m.`,
+      `Total wave height: up to ${formatValue(maxOf('waveHeight'))} m.`,
       `Wave period: ${formatValue(averageOf('wavePeriod'))} s average.`,
       `Wind: up to ${formatValue(maxOf('windSpeed'))} m/s${maxWindSample.windDirection === null ? '' : ` from ${Math.round(maxWindSample.windDirection)}°`}.`,
-      `Rain probability: up to ${formatValue(maxOf('precipProbability'), 0)}%.`,
       `Air temperature: ${formatValue(minOf('airTemp'))}-${formatValue(maxOf('airTemp'))}°C.`,
       'Conditions by hour:',
       ...hourlyConditions
@@ -333,7 +329,11 @@ async function main() {
   }
 }
 
-main().catch(error => {
-  console.error(error);
-  process.exit(1);
-});
+if (require.main === module) {
+  main().catch(error => {
+    console.error(error);
+    process.exit(1);
+  });
+}
+
+module.exports = { rateConditions };
