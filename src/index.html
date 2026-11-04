@@ -32,7 +32,7 @@ permalink: "{{ location.urlPath }}"
             <div class="flex flex-col items-center gap-1 sm:items-end">
                 <button type="button" data-copy-calendar-link="https://goodweatherswimming.github.io/ical/{{ location.id }}.ics" class="btn-pink inline-flex items-center gap-2 px-5 py-3 rounded-lg font-bold shadow-sm">
                     <i class="fas fa-copy" aria-hidden="true"></i>
-                    <span>Copy subscription link</span>
+                    <span>Copy {{ location.name }} calendar link</span>
                 </button>
                 <span data-copy-feedback role="status" aria-live="polite" class="min-h-5 text-sm text-slate-600"></span>
             </div>
@@ -123,8 +123,8 @@ permalink: "{{ location.urlPath }}"
                 <li><i class="fas fa-check text-pink-400 mr-2"></i> Swim at your own risk</li>
                 <li><i class="fas fa-check text-pink-400 mr-2"></i> No spamming or advertising</li>
             </ul>
-            <a href="{{ location.whatsappGroup }}" target="_blank" class="btn-pink inline-flex items-center justify-center gap-3 font-bold py-4 px-10 rounded-xl text-lg w-full hover:shadow-lg transition-all">
-                <i class="fab fa-whatsapp text-2xl"></i> Join {{ location.name }} Group
+                <a href="{{ location.whatsappGroup }}" target="_blank" class="btn-pink inline-flex items-center justify-center gap-3 font-bold py-4 px-10 rounded-xl text-lg w-full hover:shadow-lg transition-all">
+                    <i class="fab fa-whatsapp text-2xl"></i> Join {{ location.name }} WhatsApp Group
             </a>
         </div>
     </div>

@@ -400,7 +400,7 @@
 
                 {% if location.whatsappGroup %}
                 <div class="nav-join-group flex items-center">
-                    <a href="{{ location.whatsappGroup }}" target="_blank" rel="noopener noreferrer" aria-label="Join WhatsApp group" title="Join WhatsApp group" class="btn-pink px-3 sm:px-5 py-2 rounded-lg font-bold shadow-lg flex items-center gap-2">
+                    <a href="{{ location.whatsappGroup }}" target="_blank" rel="noopener noreferrer" aria-label="Join {{ location.name or 'main community' }} WhatsApp group" title="Join {{ location.name or 'main community' }} WhatsApp group" class="btn-pink px-3 sm:px-5 py-2 rounded-lg font-bold shadow-lg flex items-center gap-2">
                         <i class="fab fa-whatsapp" aria-hidden="true"></i><span class="hidden sm:inline">Join Group</span>
                     </a>
                 </div>

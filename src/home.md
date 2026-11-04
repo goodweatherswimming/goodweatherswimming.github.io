@@ -14,9 +14,9 @@ isHome: true
         <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight text-white">Good Weather Swimming</h1>
         <p class="text-xl mb-10 font-light max-w-2xl mx-auto">An open community of swimmers enjoying the open water. No fees, no fuss—just good weather and great company.</p>
         <a href="{{ location.whatsappGroup }}" target="_blank" class="whatsapp-pulse btn-pink inline-flex items-center gap-3 font-bold py-5 px-12 rounded-full text-xl shadow-2xl">
-            <i class="fab fa-whatsapp text-2xl"></i> Join the WhatsApp Group
+            <i class="fab fa-whatsapp text-2xl"></i> Join the main WhatsApp group
         </a>
-        <p class="mt-4 text-sm opacity-80 italic">Click to join our open community chat</p>
+        <p class="mt-4 text-sm opacity-80 italic">Connect with our open community</p>
     </div>
 </section>
 
@@ -62,7 +62,7 @@ isHome: true
         <div class="w-20 h-1 mb-12 mx-auto bg-sky-500"></div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             {%- for area in locations.areas %}
-            <div class="py-6">
+            <div class="flex flex-col py-6">
                 <h3 class="text-2xl font-bold text-primary mb-2">
                     {{ area.name }}
                 </h3>
@@ -72,8 +72,8 @@ isHome: true
                 <p class="text-slate-700 mb-4">
                     {{ area.description }}
                 </p>
-                <a href="{{ area.urlPath }}" class="btn-pink inline-block px-6 py-3 rounded-lg font-bold">
-                    Explore Spots
+                <a href="{{ area.urlPath }}" class="btn-pink mt-auto inline-block self-start px-6 py-3 rounded-lg font-bold">
+                    Explore beaches in {{ area.name }}
                 </a>
             </div>
             {%- endfor %}

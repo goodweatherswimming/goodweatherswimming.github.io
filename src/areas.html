@@ -47,7 +47,7 @@ location: "{{ area }}"
         <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
             {%- for loc in locations.locations %}
             {%- if loc.areaId == area.id %}
-            <article class="overflow-hidden rounded-lg border border-sand-border bg-white shadow-sm">
+            <article class="flex flex-col overflow-hidden rounded-lg border border-sand-border bg-white shadow-sm">
                 <figure>
                     <img src="{{ loc.photo.src }}" alt="{{ loc.photo.alt }}" loading="lazy" decoding="async" class="aspect-[16/10] w-full object-cover">
                     <figcaption class="px-4 pt-2 text-xs text-slate-500">
@@ -56,12 +56,12 @@ location: "{{ area }}"
                         · <a class="underline" href="{{ loc.photo.licenseUrl }}" target="_blank" rel="noopener noreferrer">{{ loc.photo.license }}</a>
                     </figcaption>
                 </figure>
-                <div class="p-5">
+                <div class="flex flex-1 flex-col p-5">
                     <h3 class="text-xl font-bold text-primary mb-2">{{ loc.name }}</h3>
                     <p class="text-slate-700 mb-4">{{ loc.description }}</p>
                     <p class="text-sm text-slate-600 mb-4">Lifeguards listed: {{ loc.lifeguardSeason }}</p>
-                    <a href="{{ loc.urlPath }}" class="inline-block btn-pink px-5 py-3 rounded-lg font-bold">
-                        View Details & Schedule
+                    <a href="{{ loc.urlPath }}" class="mt-auto inline-block btn-pink px-5 py-3 rounded-lg font-bold">
+                        View {{ loc.name }} details and schedule
                     </a>
                 </div>
             </article>
