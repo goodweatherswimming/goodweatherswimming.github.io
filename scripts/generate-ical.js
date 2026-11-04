@@ -37,11 +37,12 @@ async function ensureOutDir() {
   await fs.mkdir(OUT_DIR, { recursive: true });
 }
 
-function createICS(calendarName, events) {
+function createICS(calendarName, events, beachUrl) {
   const calendar = new ICAL.Component('vcalendar');
   calendar.addPropertyWithValue('version', '2.0');
   calendar.addPropertyWithValue('prodid', '-//Good-Weather-Swimming//Open-Meteo iCal Generator//EN');
   calendar.addPropertyWithValue('x-wr-calname', calendarName);
+  calendar.addPropertyWithValue('x-wr-caldesc', `Beach details: ${beachUrl}`);
 
   for (const event of events) {
     const component = new ICAL.Component('vevent');
@@ -51,6 +52,7 @@ function createICS(calendarName, events) {
     calendarEvent.endDate = ICAL.Time.fromJSDate(new Date(`${event.end}:00Z`), true);
     calendarEvent.summary = event.summary;
     calendarEvent.description = event.description;
+    component.addPropertyWithValue('url', event.url);
     component.addPropertyWithValue('dtstamp', ICAL.Time.fromJSDate(new Date(), true));
     calendar.addSubcomponent(component);
   }
@@ -255,44 +257,71 @@ function findSwimWindows(air, marine) {
 }
 
 function createSwimEvent(location, window) {
+  const beachUrl = `https://goodweatherswimming.github.io${location.urlPath}`;
   const samples = window.samples;
   const valuesOf = field => samples.map(sample => sample[field]).filter(Number.isFinite);
   const minOf = field => valuesOf(field).length ? Math.min(...valuesOf(field)) : null;
   const maxOf = field => valuesOf(field).length ? Math.max(...valuesOf(field)) : null;
-  const averageOf = field => valuesOf(field).length
-    ? valuesOf(field).reduce((sum, value) => sum + value, 0) / valuesOf(field).length
-    : null;
-  const maxWindSample = samples.reduce((maximum, sample) => sample.windSpeed > maximum.windSpeed ? sample : maximum);
+  const minWaterTemp = minOf('waterTemp');
+  const maxWaterTemp = maxOf('waterTemp');
+  const waterTempRange = minWaterTemp === maxWaterTemp
+    ? `${formatValue(minWaterTemp)}°C`
+    : `${formatValue(minWaterTemp)}-${formatValue(maxWaterTemp)}°C`;
+  const signalForLimit = (value, idealLimit, okLimit) => value <= idealLimit ? '🟢' : value <= okLimit ? '🟡' : '🔴';
   const duration = samples.length;
   const hourlyConditions = samples.map(sample => {
-    const windDirection = Number.isFinite(sample.windDirection)
-      ? ` from ${Math.round(sample.windDirection)}°`
-      : '';
-    return `${formatLocalTime(sample.start)}: ${describeWeatherCode(sample.weatherCode)}; air ${formatValue(sample.airTemp)}°C; water ${formatValue(sample.waterTemp)}°C; UV ${formatValue(sample.uvIndex)}; wind waves ${formatValue(sample.windWaveHeight)} m; total waves ${formatValue(sample.waveHeight)} m / ${formatValue(sample.wavePeriod)} s; wind ${formatValue(sample.windSpeed)} m/s${windDirection}.`;
-  });
+    const findings = [];
+
+    if (sample.waterTemp < RATING_THRESHOLDS.Ideal.minWaterTemp) {
+      findings.push(`🔴 Water ${formatValue(sample.waterTemp)}°C (below ${RATING_THRESHOLDS.Ideal.minWaterTemp}°C).`);
+    }
+    if (sample.uvIndex > RATING_THRESHOLDS.Ideal.maxUVIndex) {
+      findings.push(`${signalForLimit(sample.uvIndex, RATING_THRESHOLDS.Ideal.maxUVIndex, RATING_THRESHOLDS.OK.maxUVIndex)} UV ${formatValue(sample.uvIndex)} (target ≤${RATING_THRESHOLDS.Ideal.maxUVIndex}; limit ${RATING_THRESHOLDS.OK.maxUVIndex}).`);
+    }
+    if (sample.windWaveHeight > RATING_THRESHOLDS.Ideal.maxWindWaveHeight) {
+      findings.push(`${signalForLimit(sample.windWaveHeight, RATING_THRESHOLDS.Ideal.maxWindWaveHeight, RATING_THRESHOLDS.OK.maxWindWaveHeight)} Wind waves ${formatValue(sample.windWaveHeight)} m (target ≤${RATING_THRESHOLDS.Ideal.maxWindWaveHeight}; limit ${RATING_THRESHOLDS.OK.maxWindWaveHeight} m).`);
+    }
+    if (DANGEROUS_WEATHER_CODES.has(sample.weatherCode)) {
+      findings.push(`🔴 ${describeWeatherCode(sample.weatherCode)} (code ${sample.weatherCode}).`);
+    }
+
+    return findings.length
+      ? [formatLocalTime(sample.start), ...findings.map(finding => `- ${finding}`)].join('\n')
+      : null;
+  }).filter(Boolean);
+  const windowFindings = [
+    {
+      signal: minWaterTemp >= RATING_THRESHOLDS.Ideal.minWaterTemp ? '🟢' : '🔴',
+      text: `Water ${waterTempRange} (minimum ${RATING_THRESHOLDS.Ideal.minWaterTemp}°C).`
+    },
+    {
+      signal: signalForLimit(maxOf('uvIndex'), RATING_THRESHOLDS.Ideal.maxUVIndex, RATING_THRESHOLDS.OK.maxUVIndex),
+      text: `UV up to ${formatValue(maxOf('uvIndex'))} (target ≤${RATING_THRESHOLDS.Ideal.maxUVIndex}; limit ${RATING_THRESHOLDS.OK.maxUVIndex}).`
+    },
+    {
+      signal: signalForLimit(maxOf('windWaveHeight'), RATING_THRESHOLDS.Ideal.maxWindWaveHeight, RATING_THRESHOLDS.OK.maxWindWaveHeight),
+      text: `Wind waves up to ${formatValue(maxOf('windWaveHeight'))} m (target ≤${RATING_THRESHOLDS.Ideal.maxWindWaveHeight}; limit ${RATING_THRESHOLDS.OK.maxWindWaveHeight} m).`
+    },
+    ...[...new Set(samples.map(sample => sample.weatherCode).filter(code => DANGEROUS_WEATHER_CODES.has(code)))].map(code => ({
+      signal: '🔴',
+      text: `${describeWeatherCode(code)} (code ${code}).`
+    }))
+  ];
+  const ratingSignal = window.rating === 'Ideal' ? '🟢' : window.rating === 'OK' ? '🟡' : '🔴';
+  const summaryFindings = window.rating === 'Ideal'
+    ? [`Water ${waterTempRange}`, `Wind waves up to ${formatValue(maxOf('windWaveHeight'))} m`]
+    : windowFindings.filter(finding => finding.signal === ratingSignal).map(finding => finding.text);
 
   return {
     uid: uidFor(location.id, window.start),
     start: window.start,
     end: window.end,
-    summary: window.rating === 'Poor'
-      ? `Poor conditions (${duration} ${duration === 1 ? 'hour' : 'hours'}; not recommended)`
-      : `${window.rating} swim window (${duration} ${duration === 1 ? 'hour' : 'hours'})`,
+    summary: `${ratingSignal} ${summaryFindings.join('; ')}`,
+    url: beachUrl,
     description: [
-      `Rating: ${window.rating}${window.rating === 'Poor' ? ' - not recommended for swimming' : ''}.`,
-      `Daylight: ${formatLocalTime(window.sunrise)} sunrise to ${formatLocalTime(window.sunset)} sunset (Cyprus time).`,
-      `Ideal limits: water at least ${RATING_THRESHOLDS.Ideal.minWaterTemp}°C, UV up to ${RATING_THRESHOLDS.Ideal.maxUVIndex}, wind waves up to ${RATING_THRESHOLDS.Ideal.maxWindWaveHeight} m.`,
-      `OK limits: water at least ${RATING_THRESHOLDS.OK.minWaterTemp}°C, UV up to ${RATING_THRESHOLDS.OK.maxUVIndex}, wind waves up to ${RATING_THRESHOLDS.OK.maxWindWaveHeight} m.`,
-      'Thunderstorms, heavy or freezing precipitation, heavy snow and fog are always rated Poor.',
-      `Water temperature: ${formatValue(minOf('waterTemp'))}-${formatValue(maxOf('waterTemp'))}°C.`,
-      `UV index: up to ${formatValue(maxOf('uvIndex'))}.`,
-      `Wind-wave height: up to ${formatValue(maxOf('windWaveHeight'))} m.`,
-      `Total wave height: up to ${formatValue(maxOf('waveHeight'))} m.`,
-      `Wave period: ${formatValue(averageOf('wavePeriod'))} s average.`,
-      `Wind: up to ${formatValue(maxOf('windSpeed'))} m/s${maxWindSample.windDirection === null ? '' : ` from ${Math.round(maxWindSample.windDirection)}°`}.`,
-      `Air temperature: ${formatValue(minOf('airTemp'))}-${formatValue(maxOf('airTemp'))}°C.`,
-      'Conditions by hour:',
-      ...hourlyConditions
+      `Beach details: ${beachUrl}`,
+      ...windowFindings.map(finding => `${finding.signal} ${finding.text}`),
+      ...(hourlyConditions.length ? ['', ...hourlyConditions] : [])
     ].join('\n')
   };
 }
@@ -312,7 +341,8 @@ async function generateForLocation(location) {
   const events = findSwimWindows(air, marine)
     .map(window => createSwimEvent(location, window));
 
-  const ics = createICS(`${location.name} - Swim calendar`, events);
+  const beachUrl = `https://goodweatherswimming.github.io${location.urlPath}`;
+  const ics = createICS(`${location.name} - Swim calendar`, events, beachUrl);
   const outFile = path.join(OUT_DIR, `${location.id}.ics`);
   await fs.writeFile(outFile, ics, 'utf8');
   console.log('Wrote', outFile);
@@ -336,4 +366,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { rateConditions };
+module.exports = { createICS, createSwimEvent, rateConditions };
