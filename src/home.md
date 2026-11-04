@@ -17,6 +17,9 @@ isHome: true
         </a>
         <p class="mt-4 text-sm opacity-80 italic">Connect with our open community</p>
     </div>
+    <a class="absolute bottom-4 right-4 rounded bg-black/50 px-3 py-2 text-left text-xs text-white underline" href="https://commons.wikimedia.org/wiki/File:Aphrodite%27s_Rock,_the_site_of_the_birth_of_the_goddess_Aphrodite,_Cyprus_(21955301454).jpg" target="_blank" rel="noopener noreferrer">
+        Photo: Carole Raddato · Wikimedia Commons · CC BY-SA 2.0
+    </a>
 </section>
 
 <!-- About Section -->
