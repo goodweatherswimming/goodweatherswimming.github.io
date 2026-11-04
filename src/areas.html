@@ -44,10 +44,9 @@ location: "{{ area }}"
         </p>
         <div class="w-20 h-1 mb-12 mx-auto bg-sky-500"></div>
         
-        {%- set areaLocations = locations.locations | selectattr('areaId', 'equalto', area.id) | list %}
-
         <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-            {%- for loc in areaLocations %}
+            {%- for loc in locations.locations %}
+            {%- if loc.areaId == area.id %}
             <article class="overflow-hidden rounded-lg border border-sand-border bg-white shadow-sm">
                 <figure>
                     <img src="{{ loc.photo.src }}" alt="{{ loc.photo.alt }}" loading="lazy" decoding="async" class="aspect-[16/10] w-full object-cover">
@@ -66,6 +65,7 @@ location: "{{ area }}"
                     </a>
                 </div>
             </article>
+            {%- endif %}
             {%- endfor %}
         </div>
     </div>
