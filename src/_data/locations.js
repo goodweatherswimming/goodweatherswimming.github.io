@@ -45,42 +45,84 @@ const locationsData = {
       urlPath: "/peyia/",
       description: "Western shores of Paphos with beautiful sandy and rocky beaches",
       whatsappGroup: "https://chat.whatsapp.com/Fz2UKMPTm5q0ABkD2Oz89I",
-      region: "Paphos, Cyprus"
+      region: "Paphos, Cyprus",
+      map: {
+        src: "/assets/areas/peyia.jpg",
+        alt: "Map of Peyia showing Coral Bay and Laourou Beach",
+        latitude: 34.900874,
+        longitude: 32.341167,
+        zoom: 11
+      }
     },
     {
       id: "paphos",
       name: "Paphos",
       urlPath: "/paphos/",
       description: "Urban seaside swimming spots along the Kato Paphos waterfront.",
-      region: "Paphos, Cyprus"
+      region: "Paphos, Cyprus",
+      map: {
+        src: "/assets/areas/paphos.jpg",
+        alt: "Map of Kato Paphos showing Municipal Baths",
+        latitude: 34.75545488614151,
+        longitude: 32.4157725018998,
+        zoom: 14
+      }
     },
     {
       id: "ayia-napa",
       name: "Ayia Napa",
       urlPath: "/ayia-napa/",
       description: "Blue Flag-listed sandy beaches and coves on the southeast coast.",
-      region: "Famagusta, Cyprus"
+      region: "Famagusta, Cyprus",
+      map: {
+        src: "/assets/areas/ayia-napa.jpg",
+        alt: "Map of Ayia Napa showing Nissi, Makronisos and Landa beaches",
+        latitude: 34.9862,
+        longitude: 33.9615,
+        zoom: 12
+      }
     },
     {
       id: "protaras",
       name: "Protaras",
       urlPath: "/protaras/",
       description: "Organized bathing beaches and clear-water coves on the east coast.",
-      region: "Famagusta, Cyprus"
+      region: "Famagusta, Cyprus",
+      map: {
+        src: "/assets/areas/protaras.jpg",
+        alt: "Map of Protaras showing Fig Tree Bay and Konnos Bay",
+        latitude: 34.99817,
+        longitude: 34.06385,
+        zoom: 12
+      }
     },
     {
       id: "larnaca",
       name: "Larnaca",
       urlPath: "/larnaca/",
       description: "Urban Blue Flag beaches along Larnaca's palm-lined waterfront.",
-      region: "Larnaca, Cyprus"
+      region: "Larnaca, Cyprus",
+      map: {
+        src: "/assets/areas/larnaca.jpg",
+        alt: "Map of Larnaca showing Foinikoudes and Mackenzie beaches",
+        latitude: 34.9015,
+        longitude: 33.6379,
+        zoom: 11
+      }
     },
     {
       id: "limassol",
       name: "Limassol",
       urlPath: "/limassol/",
       description: "Blue Flag-listed beaches from the city coast to Pissouri Bay.",
-      region: "Limassol, Cyprus"
+      region: "Limassol, Cyprus",
+      map: {
+        src: "/assets/areas/limassol.jpg",
+        alt: "Map of the Limassol area showing Pissouri and Kourion beaches",
+        latitude: 34.6564,
+        longitude: 32.8023,
+        zoom: 10
+      }
     }
   ],
   locations: [
@@ -123,11 +165,11 @@ const locationsData = {
       urlPath: "/peyia-laourou-beach/",
       region: "Peyia, Paphos",
       coordinates: {
-        lat: 34.8847,
-        lng: 32.3521,
+        lat: 34.85773252605116,
+        lng: 32.36083934767451,
         zoom: 15
       },
-      googleMapsEmbed: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3274.0!2d32.3521!3d34.8847!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xdb4e3e7f3e3e3e3f!2sLaourou%20Beach!5e0!3m2!1sen!2s!4v1234567890",
+      googleMapsEmbed: "https://www.google.com/maps?q=34.85773252605116,32.36083934767451&z=15&output=embed",
       description: "Scenic beach with rocky areas and calm waters",
       whatsappGroup: "https://chat.whatsapp.com/GJgJGYaQTmFGIOaQRdjv8I",
       meetingNotes: "Meet at the main beach entrance near the parking area",
@@ -143,9 +185,9 @@ const locationsData = {
         "https://commons.wikimedia.org/wiki/File:Flickr_-_ronsaunders47_-_CORAL_BAY._PAPHOS_CYPRUS.jpg",
         "Nearby Coral Bay, used as a regional Peyia coastline reference; this is not a photo of Laourou Beach."
       ),
-      openMeteoLat: 34.8847,
-      openMeteoLng: 32.3521,
-      weatherDataUrl: openMeteoWeatherUrl(34.8847, 32.3521),
+      openMeteoLat: 34.85773252605116,
+      openMeteoLng: 32.36083934767451,
+      weatherDataUrl: openMeteoWeatherUrl(34.85773252605116, 32.36083934767451),
       dataCacheExpiryMinutes: 30
     },
     createListedBeach({

@@ -65,6 +65,12 @@ isHome: true
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             {%- for area in locations.areas %}
             <div class="flex flex-col py-6">
+                <a href="{{ area.urlPath }}" aria-label="Explore beaches in {{ area.name }}">
+                    <img src="{{ area.map.src }}" alt="{{ area.map.alt }}" loading="lazy" decoding="async" class="mb-5 aspect-[3/2] w-full rounded-lg object-cover shadow-sm">
+                </a>
+                <p class="mb-4 text-xs text-slate-500">
+                    Map of listed swimming spots. © <a class="underline" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap contributors</a>
+                </p>
                 <h3 class="text-2xl font-bold text-primary mb-2">
                     {{ area.name }}
                 </h3>
@@ -95,4 +101,3 @@ isHome: true
         <p class="mt-8 text-sm opacity-80">Or explore our areas above to join area-specific and location-specific groups.</p>
     </div>
 </section>
-

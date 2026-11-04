@@ -32,6 +32,12 @@ location: "{{ area }}"
                 <p class="text-slate-600">Visit Cyprus profiles list seasonal lifeguard service at the beaches included here. Check current hours before swimming.</p>
             </div>
         </div>
+        <figure class="mt-10 max-w-3xl mx-auto">
+            <img src="{{ area.map.src }}" alt="{{ area.map.alt }}" loading="lazy" decoding="async" class="aspect-[3/2] w-full rounded-lg object-cover shadow-md">
+            <figcaption class="mt-2 text-left text-xs text-slate-500">
+                Map of listed swimming spots. © <a class="underline" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap contributors</a>
+            </figcaption>
+        </figure>
     </div>
 </section>
 

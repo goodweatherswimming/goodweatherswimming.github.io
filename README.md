@@ -104,6 +104,19 @@ Replace `X` with the array index of your new location.
 
 Edit the meeting notes, WhatsApp group links, and other location-specific details in `src/_data/locations.js`.
 
+### Area Map Images
+
+Each area page and home-page area card uses a generated map image. The generator reads area centers and swimming-spot coordinates from `src/_data/locations.js`; it is not run by the normal site build.
+
+After adding an area or changing its map center or swimming locations, regenerate the images manually:
+
+```bash
+python3 -m pip install -r scripts/requirements-area-maps.txt
+python3 scripts/generate-area-maps.py
+```
+
+The images use OpenStreetMap tiles and include visible contributor attribution. Keep the attribution in place.
+
 ## Deployment
 
 ### GitHub Pages Workflow
