@@ -48,6 +48,13 @@ const locationsData = {
       region: "Paphos, Cyprus"
     },
     {
+      id: "paphos",
+      name: "Paphos",
+      urlPath: "/paphos/",
+      description: "Urban seaside swimming spots along the Kato Paphos waterfront.",
+      region: "Paphos, Cyprus"
+    },
+    {
       id: "ayia-napa",
       name: "Ayia Napa",
       urlPath: "/ayia-napa/",
@@ -141,6 +148,27 @@ const locationsData = {
       weatherDataUrl: openMeteoWeatherUrl(34.8847, 32.3521),
       dataCacheExpiryMinutes: 30
     },
+    createListedBeach({
+      id: "municipal-baths-paphos",
+      areaId: "paphos",
+      name: "Municipal Baths",
+      region: "Kato Paphos, Paphos",
+      latitude: 34.75545488614151,
+      longitude: 32.4157725018998,
+      description: "Blue Flag urban beach in the heart of Kato Paphos, with wooden decking, sandy sections and calm but deep water.",
+      lifeguardSeason: "April-October",
+      safetySourceUrl: "https://www.visitcyprus.com/discover-cyprus/sun-sea/beaches/municipal-baths-beach-blue-flag/",
+      photo: commonsPhoto(
+        "municipal-baths-paphos.jpg",
+        "Vrysoudia II Beach and Alykes Beach, Paphos, Cyprus",
+        "Rocky shoreline and swimming access at Vrysoudia II Beach in Paphos",
+        "Fry72, Karel Frydrýšek",
+        "CC BY-SA 4.0",
+        "https://creativecommons.org/licenses/by-sa/4.0/",
+        "https://commons.wikimedia.org/wiki/File:Vrysoudia_II_Beach_and_Alykes_Beach,_Paphos,_Cyprus.jpg",
+        "Nearby Vrysoudia II Beach, about 280 m southeast; this is a local coastline reference, not Municipal Baths."
+      )
+    }),
     createListedBeach({
       id: "nissi-beach",
       areaId: "ayia-napa",
