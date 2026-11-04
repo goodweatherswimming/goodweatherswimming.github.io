@@ -4,7 +4,6 @@ permalink: /
 location:
   name: ""
   urlPath: /
-  whatsappGroup: https://chat.whatsapp.com/FUTD7w2EH2742L1HvYyu1o
 isHome: true
 ---
 
@@ -13,7 +12,7 @@ isHome: true
     <div class="max-w-4xl px-4 py-20">
         <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight text-white">Good Weather Swimming</h1>
         <p class="text-xl mb-10 font-light max-w-2xl mx-auto">An open community of swimmers enjoying the open water. No fees, no fuss—just good weather and great company.</p>
-        <a href="{{ location.whatsappGroup }}" target="_blank" class="whatsapp-pulse btn-pink inline-flex items-center gap-3 font-bold py-5 px-12 rounded-full text-xl shadow-2xl">
+        <a href="{{ locations.generalWhatsAppGroup }}" target="_blank" class="whatsapp-pulse btn-pink inline-flex items-center gap-3 font-bold py-5 px-12 rounded-full text-xl shadow-2xl">
             <i class="fab fa-whatsapp text-2xl"></i> Join the main WhatsApp group
         </a>
         <p class="mt-4 text-sm opacity-80 italic">Connect with our open community</p>

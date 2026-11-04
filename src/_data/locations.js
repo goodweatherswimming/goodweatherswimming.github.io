@@ -36,7 +36,8 @@ function createListedBeach({ id, areaId, name, region, latitude, longitude, desc
   };
 }
 
-module.exports = {
+const locationsData = {
+  generalWhatsAppGroup: "https://chat.whatsapp.com/FUTD7w2EH2742L1HvYyu1o",
   areas: [
     {
       id: "peyia",
@@ -250,3 +251,15 @@ module.exports = {
     })
   ]
 };
+
+const areasById = new Map(locationsData.areas.map(area => [area.id, area]));
+locationsData.locations = locationsData.locations.map(location => {
+  const area = areasById.get(location.areaId);
+  return {
+    ...location,
+    areaName: area?.name,
+    areaWhatsAppGroup: area?.whatsappGroup
+  };
+});
+
+module.exports = locationsData;

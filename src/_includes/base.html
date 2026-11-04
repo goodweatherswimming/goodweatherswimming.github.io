@@ -438,11 +438,21 @@
                     </div>
                 </div>
 
-                {% set headerWhatsAppGroup = location.whatsappGroup %}
-                {% set headerWhatsAppName = location.name %}
-                {% if area is defined and area.whatsappGroup %}
+                {% set headerWhatsAppGroup = locations.generalWhatsAppGroup %}
+                {% set headerWhatsAppName = 'Main Community' %}
+                {% if area is defined %}
+                {% if area.whatsappGroup %}
                 {% set headerWhatsAppGroup = area.whatsappGroup %}
                 {% set headerWhatsAppName = area.name %}
+                {% endif %}
+                {% elif location.id %}
+                {% if location.whatsappGroup %}
+                {% set headerWhatsAppGroup = location.whatsappGroup %}
+                {% set headerWhatsAppName = location.name %}
+                {% elif location.areaWhatsAppGroup %}
+                {% set headerWhatsAppGroup = location.areaWhatsAppGroup %}
+                {% set headerWhatsAppName = location.areaName %}
+                {% endif %}
                 {% endif %}
                 {% if headerWhatsAppGroup %}
                 <div class="nav-join-group flex items-center">
