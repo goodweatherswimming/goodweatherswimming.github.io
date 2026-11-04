@@ -109,13 +109,10 @@
             background-color: rgba(0, 77, 122, 0.1);
         }
 
-        .nav-dropdown {
-            flex: 0 0 auto;
-            position: relative;
-        }
-
-        .nav-dropdown summary {
+        .nav-dropdown-trigger {
             align-items: center;
+            background: transparent;
+            border: 0;
             border-radius: 0.5rem;
             color: var(--primary-blue);
             cursor: pointer;
@@ -123,46 +120,81 @@
             font-size: 0.875rem;
             font-weight: 700;
             gap: 0.5rem;
-            list-style: none;
             min-height: 2.5rem;
             padding: 0.625rem 0.875rem;
             white-space: nowrap;
         }
 
-        .nav-dropdown summary::-webkit-details-marker { display: none; }
-
-        .nav-dropdown summary:hover,
-        .nav-dropdown[open] summary,
-        .nav-dropdown summary:focus-visible {
+        .nav-dropdown-trigger:hover,
+        .nav-dropdown-trigger:focus-visible {
             background-color: rgba(0, 77, 122, 0.1);
         }
 
-        .nav-dropdown-panel {
+        .areas-dialog {
             background: white;
             border: 1px solid var(--sand-border);
             border-radius: 0.75rem;
             box-shadow: 0 12px 28px rgba(0, 45, 77, 0.18);
-            left: 0;
+            color: #0f172a;
+            left: max(1rem, calc((100vw - 80rem) / 2 + 1rem));
+            margin: 0;
             max-height: min(70vh, 34rem);
+            max-width: min(88vw, 18rem);
             overflow-y: auto;
             padding: 0.5rem;
-            position: absolute;
-            text-align: left;
-            top: calc(100% + 0.25rem);
+            position: fixed;
+            top: 5rem;
             width: min(88vw, 18rem);
-            z-index: 100;
         }
 
-        .nav-dropdown-panel a {
+        .areas-dialog::backdrop {
+            background: rgba(15, 23, 42, 0.35);
+        }
+
+        .areas-dialog-heading {
+            align-items: center;
+            display: flex;
+            justify-content: space-between;
+            padding: 0.25rem 0.5rem 0.5rem;
+        }
+
+        .areas-dialog-heading h2 {
+            color: var(--primary-blue);
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .areas-dialog-heading button {
+            align-items: center;
+            background: transparent;
+            border: 0;
             border-radius: 0.5rem;
+            color: var(--primary-blue);
+            cursor: pointer;
+            display: flex;
+            height: 2.5rem;
+            justify-content: center;
+            width: 2.5rem;
+        }
+
+        .areas-dialog a {
+            border-radius: 0.5rem;
+            color: var(--primary-blue);
             display: block;
             min-height: 2.5rem;
             padding: 0.625rem 0.75rem;
         }
 
-        .nav-dropdown-panel a:hover,
-        .nav-dropdown-panel a:focus-visible {
+        .areas-dialog a:hover,
+        .areas-dialog a:focus-visible,
+        .areas-dialog-heading button:hover {
             background-color: rgba(0, 77, 122, 0.1);
+        }
+
+        .areas-dialog a:focus-visible,
+        .areas-dialog-heading button:focus-visible {
+            outline: 3px solid var(--energy-pink);
+            outline-offset: 2px;
         }
 
         .beach-search {
@@ -254,7 +286,7 @@
         }
 
         .primary-navigation a:focus-visible,
-        .nav-dropdown summary:focus-visible,
+        .nav-dropdown-trigger:focus-visible,
         .scroll-to-top:focus-visible {
             outline: 3px solid var(--energy-pink);
             outline-offset: 2px;
@@ -372,14 +404,22 @@
                 </a>
 
                 <div class="primary-navigation" aria-label="Pages">
-                    <details class="nav-dropdown">
-                        <summary>Areas <i class="fas fa-chevron-down" aria-hidden="true"></i></summary>
-                        <div class="nav-dropdown-panel">
+                    <button type="button" class="nav-dropdown-trigger" data-open-areas-dialog aria-haspopup="dialog" aria-controls="areas-dialog">
+                        Areas <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                    </button>
+                    <dialog id="areas-dialog" class="areas-dialog" aria-labelledby="areas-dialog-title">
+                        <div class="areas-dialog-heading">
+                            <h2 id="areas-dialog-title">Areas</h2>
+                            <button type="button" data-close-areas-dialog aria-label="Close areas menu" title="Close areas menu">
+                                <i class="fas fa-xmark" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <nav aria-label="Areas">
                             {% for area in locations.areas %}
                             <a href="{{ area.urlPath }}">{{ area.name }}</a>
                             {% endfor %}
-                        </div>
-                    </details>
+                        </nav>
+                    </dialog>
                     <div class="beach-search" data-beach-search>
                         <label class="sr-only" for="beach-search-input">Find a beach by name or area</label>
                         <input id="beach-search-input" type="search" placeholder="Find a beach" autocomplete="off" aria-controls="beach-search-results" aria-expanded="false">
@@ -398,10 +438,16 @@
                     </div>
                 </div>
 
-                {% if location.whatsappGroup %}
+                {% set headerWhatsAppGroup = location.whatsappGroup %}
+                {% set headerWhatsAppName = location.name %}
+                {% if area is defined and area.whatsappGroup %}
+                {% set headerWhatsAppGroup = area.whatsappGroup %}
+                {% set headerWhatsAppName = area.name %}
+                {% endif %}
+                {% if headerWhatsAppGroup %}
                 <div class="nav-join-group flex items-center">
-                    <a href="{{ location.whatsappGroup }}" target="_blank" rel="noopener noreferrer" aria-label="Join {{ location.name or 'main community' }} WhatsApp group" title="Join {{ location.name or 'main community' }} WhatsApp group" class="btn-pink px-3 sm:px-5 py-2 rounded-lg font-bold shadow-lg flex items-center gap-2">
-                        <i class="fab fa-whatsapp" aria-hidden="true"></i><span class="hidden sm:inline">Join Group</span>
+                    <a href="{{ headerWhatsAppGroup }}" target="_blank" rel="noopener noreferrer" aria-label="Join {{ headerWhatsAppName or 'main community' }} WhatsApp group" title="Join {{ headerWhatsAppName or 'main community' }} WhatsApp group" class="btn-pink px-3 sm:px-5 py-2 rounded-lg font-bold shadow-lg flex items-center gap-2">
+                        <i class="fab fa-whatsapp" aria-hidden="true"></i><span class="hidden sm:inline">Join {{ headerWhatsAppName or 'Group' }}</span>
                     </a>
                 </div>
                 {% endif %}
@@ -452,6 +498,21 @@
 
         document.addEventListener('pointerover', prefetchPageFromEvent, { passive: true });
         document.addEventListener('focusin', prefetchPageFromEvent);
+
+        const areasDialog = document.querySelector('#areas-dialog');
+        const openAreasDialogButton = document.querySelector('[data-open-areas-dialog]');
+        if (areasDialog && openAreasDialogButton) {
+            const closeAreasDialogButton = areasDialog.querySelector('[data-close-areas-dialog]');
+            openAreasDialogButton.addEventListener('click', () => areasDialog.showModal());
+            closeAreasDialogButton.addEventListener('click', () => areasDialog.close());
+            areasDialog.addEventListener('click', event => {
+                const bounds = areasDialog.getBoundingClientRect();
+                const outsideDialog = event.clientX < bounds.left || event.clientX > bounds.right
+                    || event.clientY < bounds.top || event.clientY > bounds.bottom;
+                if (outsideDialog) areasDialog.close();
+            });
+            areasDialog.addEventListener('close', () => openAreasDialogButton.focus());
+        }
 
         document.addEventListener('click', async event => {
             const button = event.target.closest?.('[data-copy-calendar-link]');
