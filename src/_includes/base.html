@@ -15,16 +15,16 @@
     <meta property="og:url" content="https://goodweatherswimming.github.io{{ location.urlPath }}">
     <meta property="og:title" content="Good Weather Swimming {{ location.name }} | {{ location.region }}">
     <meta property="og:description" content="An open community of swimmers enjoying the open water. No fees, no fuss—just good weather and great company.">
-    <meta property="og:image" content="{% if location.photo %}https://goodweatherswimming.github.io{{ location.photo.src }}{% else %}https://images.unsplash.com/photo-1519046904884-53103b34b206?auto=format&fit=crop&q=80&w=1200&h=630{% endif %}">
-    <meta property="og:image:alt" content="{% if location.photo %}{{ location.photo.alt }}{% else %}Open-water swimming in Cyprus{% endif %}">
+    <meta property="og:image" content="{% if location.photo %}https://goodweatherswimming.github.io{{ location.photo.src }}{% else %}https://goodweatherswimming.github.io/assets/aphrodites-rock.jpg{% endif %}">
+    <meta property="og:image:alt" content="{% if location.photo %}{{ location.photo.alt }}{% else %}Aphrodite's Rock and Mediterranean coastline in Cyprus{% endif %}">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://goodweatherswimming.github.io{{ location.urlPath }}">
     <meta property="twitter:title" content="Good Weather Swimming {{ location.name }}">
     <meta property="twitter:description" content="Join our free open-water swimming group in {{ location.region }}. Weather-based swim windows for all levels.">
-    <meta property="twitter:image" content="{% if location.photo %}https://goodweatherswimming.github.io{{ location.photo.src }}{% else %}https://images.unsplash.com/photo-1519046904884-53103b34b206?auto=format&fit=crop&q=80&w=1200&h=630{% endif %}">
-    <meta property="twitter:image:alt" content="{% if location.photo %}{{ location.photo.alt }}{% else %}Open-water swimming in Cyprus{% endif %}">
+    <meta property="twitter:image" content="{% if location.photo %}https://goodweatherswimming.github.io{{ location.photo.src }}{% else %}https://goodweatherswimming.github.io/assets/aphrodites-rock.jpg{% endif %}">
+    <meta property="twitter:image:alt" content="{% if location.photo %}{{ location.photo.alt }}{% else %}Aphrodite's Rock and Mediterranean coastline in Cyprus{% endif %}">
 
     <!-- Favicon using Swimming Emoji -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏊</text></svg>">
@@ -110,7 +110,6 @@
             background-color: rgba(0, 77, 122, 0.1);
         }
 
-        .nav-dropdown-trigger,
         .beach-search-trigger {
             align-items: center;
             border-radius: 0.5rem;
@@ -125,12 +124,6 @@
             white-space: nowrap;
         }
 
-        .nav-dropdown-trigger {
-            background: transparent;
-            border: 0;
-            color: var(--primary-blue);
-        }
-
         .beach-search-trigger {
             background: white;
             border: 1px solid var(--sand-border);
@@ -141,8 +134,6 @@
             min-width: min(100%, 13rem);
         }
 
-        .nav-dropdown-trigger:hover,
-        .nav-dropdown-trigger:focus-visible,
         .beach-search-trigger:hover,
         .beach-search-trigger:focus-visible {
             background-color: rgba(0, 77, 122, 0.1);
@@ -243,35 +234,18 @@
         }
 
         .beach-picker-content {
-            display: grid;
             flex: 1 1 auto;
-            grid-template-columns: minmax(14rem, 0.8fr) minmax(0, 1.2fr);
-            min-height: 0;
-            overflow: hidden;
-        }
-
-        .beach-picker-content section {
             min-height: 0;
             overflow-y: auto;
             padding: 0 1rem 1rem;
         }
 
-        .beach-picker-content section + section {
-            border-left: 1px solid var(--sand-border);
-        }
-
-        .beach-picker-content h3 {
-            color: var(--primary-blue);
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.875rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-
         .beach-picker-dialog a {
             border-radius: 0.5rem;
             color: var(--primary-blue);
-            display: block;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             min-height: 2.75rem;
             padding: 0.625rem 0.75rem;
         }
@@ -280,18 +254,24 @@
             background-color: rgba(0, 77, 122, 0.1);
         }
 
-        .beach-picker-areas,
-        .beach-search-results ul {
+        .beach-search-results {
             list-style: none;
             margin: 0;
             padding: 0;
         }
 
-        .beach-picker-areas a,
-        .beach-search-results a {
-            align-items: center;
-            display: flex;
-            justify-content: space-between;
+        .beach-search-results li[hidden] {
+            display: none;
+        }
+
+        .beach-search-results small {
+            background: rgba(0, 77, 122, 0.08);
+            border-radius: 999px;
+            color: #475569;
+            flex: 0 0 auto;
+            font-size: 0.75rem;
+            margin-left: 0.75rem;
+            padding: 0.2rem 0.55rem;
         }
 
         @media (max-width: 40rem) {
@@ -317,23 +297,6 @@
                 width: 100vw;
             }
 
-            .beach-picker-content {
-                display: flex;
-                flex-direction: column;
-                overflow-y: auto;
-            }
-
-            .beach-picker-content section {
-                flex: 0 0 auto;
-                overflow: visible;
-                padding: 0 1rem 1rem;
-            }
-
-            .beach-picker-content section + section {
-                border-left: 0;
-                border-top: 1px solid var(--sand-border);
-                padding-top: 1rem;
-            }
         }
 
         .beach-search-status {
@@ -342,15 +305,7 @@
             padding: 0.5rem 0.75rem;
         }
 
-        .beach-picker-content small {
-            color: #64748b;
-            font-size: 0.75rem;
-            margin-left: 0.75rem;
-            text-align: right;
-        }
-
         .primary-navigation a:focus-visible,
-        .nav-dropdown-trigger:focus-visible,
         .beach-search-trigger:focus-visible,
         .scroll-to-top:focus-visible {
             outline: 3px solid var(--energy-pink);
@@ -384,8 +339,8 @@
         }
 
         .hero-gradient {
-            background: linear-gradient(rgba(0, 77, 122, 0.7), rgba(139, 69, 19, 0.5)), 
-                        url('https://images.unsplash.com/photo-1519046904884-53103b34b206?auto=format&fit=crop&q=80&w=2000') center/cover;
+            background: linear-gradient(rgba(0, 45, 77, 0.34), rgba(0, 45, 77, 0.5)),
+                        url('/assets/aphrodites-rock.jpg') center/cover;
         }
 
         .whatsapp-pulse {
@@ -469,48 +424,39 @@
                 </a>
 
                 <div class="primary-navigation" aria-label="Pages">
-                    <button type="button" class="nav-dropdown-trigger" data-open-beach-picker data-picker-focus="areas" aria-haspopup="dialog" aria-controls="beach-picker-dialog">
-                        Areas <i class="fas fa-chevron-down" aria-hidden="true"></i>
-                    </button>
-                    <button type="button" class="beach-search-trigger" data-open-beach-picker data-picker-focus="search" aria-haspopup="dialog" aria-controls="beach-picker-dialog" aria-label="Search beaches" title="Search beaches">
-                        <i class="fas fa-magnifying-glass" aria-hidden="true"></i><span>Find a beach</span>
+                    <button type="button" class="beach-search-trigger" data-open-beach-picker aria-haspopup="dialog" aria-controls="beach-picker-dialog" aria-label="Search areas and beaches" title="Search areas and beaches">
+                        <i class="fas fa-magnifying-glass" aria-hidden="true"></i><span>Search</span>
                     </button>
                 </div>
 
                 <dialog id="beach-picker-dialog" class="beach-picker-dialog" aria-labelledby="beach-picker-title">
                     <div class="beach-picker-header">
-                        <h2 id="beach-picker-title">Find a beach or choose an area</h2>
+                        <h2 id="beach-picker-title">Search</h2>
                         <button type="button" data-close-beach-picker aria-label="Close beach picker" title="Close beach picker">
                             <i class="fas fa-xmark" aria-hidden="true"></i>
                         </button>
                     </div>
                     <div class="beach-picker-search">
                         <i class="fas fa-magnifying-glass" aria-hidden="true"></i>
-                        <label class="sr-only" for="beach-search-input">Search beaches by name or area</label>
-                        <input id="beach-search-input" type="search" placeholder="Search beaches by name or area" autocomplete="off" aria-controls="beach-search-results">
+                        <label class="sr-only" for="beach-search-input">Search areas and beaches</label>
+                        <input id="beach-search-input" type="search" placeholder="Search areas and beaches" autocomplete="off" aria-controls="beach-search-results">
                     </div>
                     <div class="beach-picker-content">
-                        <section aria-labelledby="beach-picker-areas-heading">
-                            <h3 id="beach-picker-areas-heading">Areas</h3>
-                            <ul class="beach-picker-areas">
-                                {% for area in locations.areas %}
-                                <li><a href="{{ area.urlPath }}">{{ area.name }}</a></li>
-                                {% endfor %}
-                            </ul>
-                        </section>
-                        <section aria-labelledby="beach-picker-results-heading">
-                            <h3 id="beach-picker-results-heading">Beaches</h3>
-                            <p class="beach-search-status" data-beach-search-prompt>Type above to search beaches.</p>
-                            <p class="beach-search-status" data-beach-search-status role="status" aria-live="polite" hidden></p>
-                            <ul id="beach-search-results" class="beach-search-results" hidden>
-                                {% for beach in locations.locations %}
-                                <li data-beach-search-result data-search-text="{{ beach.name }} {{ beach.region }} {{ beach.areaName }}">
-                                    <a href="{{ beach.urlPath }}"><span>{{ beach.name }}</span><small>{{ beach.areaName }}</small></a>
-                                </li>
-                                {% endfor %}
-                            </ul>
-                            <p class="beach-search-status" data-beach-search-empty hidden>No beaches match that search.</p>
-                        </section>
+                        <p class="beach-search-status" data-beach-search-prompt>Type to search areas and beaches.</p>
+                        <p class="beach-search-status" data-beach-search-status role="status" aria-live="polite" hidden></p>
+                        <ul id="beach-search-results" class="beach-search-results" hidden>
+                            {% for area in locations.areas %}
+                            <li data-beach-search-result data-search-text="{{ area.name }} {{ area.region }} {{ area.description }}">
+                                <a href="{{ area.urlPath }}"><span>{{ area.name }}</span><small>Area</small></a>
+                            </li>
+                            {% endfor %}
+                            {% for beach in locations.locations %}
+                            <li data-beach-search-result data-search-text="{{ beach.name }} {{ beach.region }} {{ beach.areaName }}">
+                                <a href="{{ beach.urlPath }}"><span>{{ beach.name }}</span><small>Beach</small></a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        <p class="beach-search-status" data-beach-search-empty hidden>No matching areas or beaches.</p>
                     </div>
                 </dialog>
 
@@ -595,32 +541,44 @@
             const beachSearchPrompt = beachPickerDialog.querySelector('[data-beach-search-prompt]');
             const beachSearchStatus = beachPickerDialog.querySelector('[data-beach-search-status]');
             const beachSearchEmpty = beachPickerDialog.querySelector('[data-beach-search-empty]');
-            const firstAreaLink = beachPickerDialog.querySelector('.beach-picker-areas a');
             let lastBeachPickerTrigger;
+            let searchDebounce;
 
             function updateBeachResults() {
                 const query = beachSearchInput.value.trim().toLocaleLowerCase();
-                let matchCount = 0;
-
-                for (const item of beachResultItems) {
-                    const matches = query && item.dataset.searchText.toLocaleLowerCase().includes(query);
-                    item.hidden = !matches;
-                    if (matches) matchCount++;
-                }
-
-                beachResults.hidden = !query || matchCount === 0;
+                window.clearTimeout(searchDebounce);
+                beachResults.hidden = true;
+                beachSearchEmpty.hidden = true;
                 beachSearchPrompt.hidden = Boolean(query);
                 beachSearchStatus.hidden = !query;
-                beachSearchStatus.textContent = `${matchCount} matching ${matchCount === 1 ? 'beach' : 'beaches'}`;
-                beachSearchEmpty.hidden = !query || matchCount > 0;
+
+                if (!query) {
+                    for (const item of beachResultItems) item.hidden = false;
+                    beachResults.hidden = false;
+                    beachSearchPrompt.hidden = true;
+                    return;
+                }
+
+                beachSearchStatus.textContent = 'Searching...';
+                searchDebounce = window.setTimeout(() => {
+                    let matchCount = 0;
+                    for (const item of beachResultItems) {
+                        const matches = item.dataset.searchText.toLocaleLowerCase().includes(query);
+                        item.hidden = !matches;
+                        if (matches) matchCount++;
+                    }
+
+                    beachResults.hidden = matchCount === 0;
+                    beachSearchStatus.textContent = `${matchCount} matching ${matchCount === 1 ? 'result' : 'results'}`;
+                    beachSearchEmpty.hidden = matchCount > 0;
+                }, 250);
             }
 
             for (const trigger of beachPickerTriggers) {
                 trigger.addEventListener('click', () => {
                     lastBeachPickerTrigger = trigger;
                     beachPickerDialog.showModal();
-                    if (trigger.dataset.pickerFocus === 'search') beachSearchInput.focus();
-                    else firstAreaLink?.focus();
+                    beachSearchInput.focus();
                 });
             }
 
