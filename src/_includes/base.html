@@ -80,6 +80,7 @@
             backdrop-filter: blur(12px) saturate(180%);
             -webkit-backdrop-filter: blur(12px) saturate(180%);
             border-bottom: 1px solid rgba(0, 77, 122, 0.1);
+            position: relative;
             z-index: 50;
             transition: background-color 0.3s ease;
         }
@@ -109,62 +110,86 @@
             background-color: rgba(0, 77, 122, 0.1);
         }
 
-        .nav-dropdown-trigger {
+        .nav-dropdown-trigger,
+        .beach-search-trigger {
             align-items: center;
-            background: transparent;
-            border: 0;
             border-radius: 0.5rem;
-            color: var(--primary-blue);
             cursor: pointer;
             display: flex;
             font-size: 0.875rem;
             font-weight: 700;
             gap: 0.5rem;
-            min-height: 2.5rem;
+            min-height: 2.75rem;
             padding: 0.625rem 0.875rem;
+            text-align: left;
             white-space: nowrap;
         }
 
+        .nav-dropdown-trigger {
+            background: transparent;
+            border: 0;
+            color: var(--primary-blue);
+        }
+
+        .beach-search-trigger {
+            background: white;
+            border: 1px solid var(--sand-border);
+            color: #64748b;
+            flex: 1 1 13rem;
+            justify-content: flex-start;
+            max-width: 22rem;
+            min-width: min(100%, 13rem);
+        }
+
         .nav-dropdown-trigger:hover,
-        .nav-dropdown-trigger:focus-visible {
+        .nav-dropdown-trigger:focus-visible,
+        .beach-search-trigger:hover,
+        .beach-search-trigger:focus-visible {
             background-color: rgba(0, 77, 122, 0.1);
         }
 
-        .areas-dialog {
+        .beach-picker-dialog {
             background: white;
-            border: 1px solid var(--sand-border);
+            border: 0;
             border-radius: 0.75rem;
-            box-shadow: 0 12px 28px rgba(0, 45, 77, 0.18);
+            box-shadow: 0 20px 60px rgba(0, 45, 77, 0.24);
             color: #0f172a;
-            left: max(1rem, calc((100vw - 80rem) / 2 + 1rem));
-            margin: 0;
-            max-height: min(70vh, 34rem);
-            max-width: min(88vw, 18rem);
-            overflow-y: auto;
-            padding: 0.5rem;
+            display: none;
+            flex-direction: column;
+            height: min(88dvh, 48rem);
+            inset: 0;
+            margin: auto;
+            max-height: calc(100dvh - 2rem);
+            max-width: 56rem;
+            overflow: hidden;
             position: fixed;
-            top: 5rem;
-            width: min(88vw, 18rem);
+            width: calc(100vw - 2rem);
         }
 
-        .areas-dialog::backdrop {
-            background: rgba(15, 23, 42, 0.35);
+        .beach-picker-dialog[open] {
+            display: flex;
         }
 
-        .areas-dialog-heading {
+        .beach-picker-dialog::backdrop {
+            background: rgba(15, 23, 42, 0.48);
+        }
+
+        .beach-picker-header {
             align-items: center;
+            border-bottom: 1px solid var(--sand-border);
             display: flex;
             justify-content: space-between;
-            padding: 0.25rem 0.5rem 0.5rem;
+            min-height: 4.5rem;
+            padding: 0.75rem 1rem;
         }
 
-        .areas-dialog-heading h2 {
+        .beach-picker-header h2 {
             color: var(--primary-blue);
-            font-size: 1rem;
+            font-size: 1.25rem;
             font-weight: 700;
         }
 
-        .areas-dialog-heading button {
+        .beach-picker-header button {
             align-items: center;
             background: transparent;
             border: 0;
@@ -177,31 +202,96 @@
             width: 2.5rem;
         }
 
-        .areas-dialog a {
-            border-radius: 0.5rem;
-            color: var(--primary-blue);
-            display: block;
-            min-height: 2.5rem;
-            padding: 0.625rem 0.75rem;
-        }
-
-        .areas-dialog a:hover,
-        .areas-dialog a:focus-visible,
-        .areas-dialog-heading button:hover {
+        .beach-picker-header button:hover {
             background-color: rgba(0, 77, 122, 0.1);
         }
 
-        .areas-dialog a:focus-visible,
-        .areas-dialog-heading button:focus-visible {
+        .beach-picker-header button:focus-visible,
+        .beach-picker-dialog a:focus-visible {
             outline: 3px solid var(--energy-pink);
             outline-offset: 2px;
         }
 
-        .beach-search {
-            flex: 1 1 13rem;
-            max-width: 22rem;
-            min-width: min(100%, 13rem);
+        .beach-picker-search {
+            margin: 1rem;
             position: relative;
+        }
+
+        .beach-picker-search > i {
+            color: #64748b;
+            left: 0.875rem;
+            pointer-events: none;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .beach-picker-search input {
+            background: white;
+            border: 1px solid var(--sand-border);
+            border-radius: 0.625rem;
+            color: #0f172a;
+            font-size: 1rem;
+            min-height: 3rem;
+            padding: 0.75rem 0.875rem 0.75rem 2.5rem;
+            width: 100%;
+        }
+
+        .beach-picker-search input:focus-visible {
+            border-color: var(--primary-blue);
+            outline: 3px solid rgba(0, 119, 190, 0.2);
+        }
+
+        .beach-picker-content {
+            display: grid;
+            flex: 1 1 auto;
+            grid-template-columns: minmax(14rem, 0.8fr) minmax(0, 1.2fr);
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        .beach-picker-content section {
+            min-height: 0;
+            overflow-y: auto;
+            padding: 0 1rem 1rem;
+        }
+
+        .beach-picker-content section + section {
+            border-left: 1px solid var(--sand-border);
+        }
+
+        .beach-picker-content h3 {
+            color: var(--primary-blue);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .beach-picker-dialog a {
+            border-radius: 0.5rem;
+            color: var(--primary-blue);
+            display: block;
+            min-height: 2.75rem;
+            padding: 0.625rem 0.75rem;
+        }
+
+        .beach-picker-dialog a:hover {
+            background-color: rgba(0, 77, 122, 0.1);
+        }
+
+        .beach-picker-areas,
+        .beach-search-results ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .beach-picker-areas a,
+        .beach-search-results a {
+            align-items: center;
+            display: flex;
+            justify-content: space-between;
         }
 
         @media (max-width: 40rem) {
@@ -211,48 +301,40 @@
                 order: 3;
             }
 
-            .beach-search {
+            .beach-search-trigger {
                 max-width: none;
             }
 
             .nav-join-group {
                 order: 2;
             }
-        }
 
-        .beach-search input {
-            background: white;
-            border: 1px solid var(--sand-border);
-            border-radius: 0.625rem;
-            color: #0f172a;
-            font-size: 0.875rem;
-            min-height: 2.75rem;
-            padding: 0.625rem 0.75rem;
-            width: 100%;
-        }
+            .beach-picker-dialog {
+                border-radius: 0;
+                height: 100dvh;
+                max-height: 100dvh;
+                max-width: none;
+                width: 100vw;
+            }
 
-        .beach-search input:focus-visible {
-            border-color: var(--primary-blue);
-            outline: 3px solid rgba(0, 119, 190, 0.2);
-        }
+            .beach-picker-content {
+                display: flex;
+                flex-direction: column;
+                overflow-y: auto;
+            }
 
-        .beach-search-results {
-            background: white;
-            border: 1px solid var(--sand-border);
-            border-radius: 0.75rem;
-            box-shadow: 0 12px 28px rgba(0, 45, 77, 0.18);
-            left: 0;
-            max-height: min(65vh, 30rem);
-            overflow-y: auto;
-            padding: 0.5rem;
-            position: absolute;
-            text-align: left;
-            top: calc(100% + 0.35rem);
-            width: min(90vw, 26rem);
-            z-index: 110;
-        }
+            .beach-picker-content section {
+                flex: 0 0 auto;
+                overflow: visible;
+                padding: 0 1rem 1rem;
+            }
 
-        .beach-search-results[hidden] { display: none; }
+            .beach-picker-content section + section {
+                border-left: 0;
+                border-top: 1px solid var(--sand-border);
+                padding-top: 1rem;
+            }
+        }
 
         .beach-search-status {
             color: #475569;
@@ -260,25 +342,7 @@
             padding: 0.5rem 0.75rem;
         }
 
-        .beach-search-results ul { list-style: none; margin: 0; padding: 0; }
-
-        .beach-search-results a {
-            align-items: center;
-            border-radius: 0.5rem;
-            color: var(--primary-blue);
-            display: flex;
-            font-size: 0.875rem;
-            justify-content: space-between;
-            min-height: 2.75rem;
-            padding: 0.625rem 0.75rem;
-            text-align: left;
-            white-space: normal;
-        }
-
-        .beach-search-results a:hover,
-        .beach-search-results a:focus-visible { background: rgba(0, 77, 122, 0.1); }
-
-        .beach-search-results small {
+        .beach-picker-content small {
             color: #64748b;
             font-size: 0.75rem;
             margin-left: 0.75rem;
@@ -287,6 +351,7 @@
 
         .primary-navigation a:focus-visible,
         .nav-dropdown-trigger:focus-visible,
+        .beach-search-trigger:focus-visible,
         .scroll-to-top:focus-visible {
             outline: 3px solid var(--energy-pink);
             outline-offset: 2px;
@@ -404,39 +469,50 @@
                 </a>
 
                 <div class="primary-navigation" aria-label="Pages">
-                    <button type="button" class="nav-dropdown-trigger" data-open-areas-dialog aria-haspopup="dialog" aria-controls="areas-dialog">
+                    <button type="button" class="nav-dropdown-trigger" data-open-beach-picker data-picker-focus="areas" aria-haspopup="dialog" aria-controls="beach-picker-dialog">
                         Areas <i class="fas fa-chevron-down" aria-hidden="true"></i>
                     </button>
-                    <dialog id="areas-dialog" class="areas-dialog" aria-labelledby="areas-dialog-title">
-                        <div class="areas-dialog-heading">
-                            <h2 id="areas-dialog-title">Areas</h2>
-                            <button type="button" data-close-areas-dialog aria-label="Close areas menu" title="Close areas menu">
-                                <i class="fas fa-xmark" aria-hidden="true"></i>
-                            </button>
-                        </div>
-                        <nav aria-label="Areas">
-                            {% for area in locations.areas %}
-                            <a href="{{ area.urlPath }}">{{ area.name }}</a>
-                            {% endfor %}
-                        </nav>
-                    </dialog>
-                    <div class="beach-search" data-beach-search>
-                        <label class="sr-only" for="beach-search-input">Find a beach by name or area</label>
-                        <input id="beach-search-input" type="search" placeholder="Find a beach" autocomplete="off" aria-controls="beach-search-results" aria-expanded="false">
-                        <div id="beach-search-results" class="beach-search-results" hidden>
-                            <p class="beach-search-status" data-beach-search-status role="status" aria-live="polite"></p>
-                            <ul>
+                    <button type="button" class="beach-search-trigger" data-open-beach-picker data-picker-focus="search" aria-haspopup="dialog" aria-controls="beach-picker-dialog" aria-label="Search beaches" title="Search beaches">
+                        <i class="fas fa-magnifying-glass" aria-hidden="true"></i><span>Find a beach</span>
+                    </button>
+                </div>
+
+                <dialog id="beach-picker-dialog" class="beach-picker-dialog" aria-labelledby="beach-picker-title">
+                    <div class="beach-picker-header">
+                        <h2 id="beach-picker-title">Find a beach or choose an area</h2>
+                        <button type="button" data-close-beach-picker aria-label="Close beach picker" title="Close beach picker">
+                            <i class="fas fa-xmark" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <div class="beach-picker-search">
+                        <i class="fas fa-magnifying-glass" aria-hidden="true"></i>
+                        <label class="sr-only" for="beach-search-input">Search beaches by name or area</label>
+                        <input id="beach-search-input" type="search" placeholder="Search beaches by name or area" autocomplete="off" aria-controls="beach-search-results">
+                    </div>
+                    <div class="beach-picker-content">
+                        <section aria-labelledby="beach-picker-areas-heading">
+                            <h3 id="beach-picker-areas-heading">Areas</h3>
+                            <ul class="beach-picker-areas">
+                                {% for area in locations.areas %}
+                                <li><a href="{{ area.urlPath }}">{{ area.name }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </section>
+                        <section aria-labelledby="beach-picker-results-heading">
+                            <h3 id="beach-picker-results-heading">Beaches</h3>
+                            <p class="beach-search-status" data-beach-search-prompt>Type above to search beaches.</p>
+                            <p class="beach-search-status" data-beach-search-status role="status" aria-live="polite" hidden></p>
+                            <ul id="beach-search-results" class="beach-search-results" hidden>
                                 {% for beach in locations.locations %}
-                                {% set beachArea = locations.areas | selectattr('id', 'equalto', beach.areaId) | first %}
-                                <li data-beach-search-result data-search-text="{{ beach.name }} {{ beach.region }} {{ beachArea.name }}">
-                                    <a href="{{ beach.urlPath }}"><span>{{ beach.name }}</span><small>{{ beachArea.name }}</small></a>
+                                <li data-beach-search-result data-search-text="{{ beach.name }} {{ beach.region }} {{ beach.areaName }}">
+                                    <a href="{{ beach.urlPath }}"><span>{{ beach.name }}</span><small>{{ beach.areaName }}</small></a>
                                 </li>
                                 {% endfor %}
                             </ul>
                             <p class="beach-search-status" data-beach-search-empty hidden>No beaches match that search.</p>
-                        </div>
+                        </section>
                     </div>
-                </div>
+                </dialog>
 
                 {% set headerWhatsAppGroup = locations.generalWhatsAppGroup %}
                 {% set headerWhatsAppName = 'Main Community' %}
@@ -509,19 +585,63 @@
         document.addEventListener('pointerover', prefetchPageFromEvent, { passive: true });
         document.addEventListener('focusin', prefetchPageFromEvent);
 
-        const areasDialog = document.querySelector('#areas-dialog');
-        const openAreasDialogButton = document.querySelector('[data-open-areas-dialog]');
-        if (areasDialog && openAreasDialogButton) {
-            const closeAreasDialogButton = areasDialog.querySelector('[data-close-areas-dialog]');
-            openAreasDialogButton.addEventListener('click', () => areasDialog.showModal());
-            closeAreasDialogButton.addEventListener('click', () => areasDialog.close());
-            areasDialog.addEventListener('click', event => {
-                const bounds = areasDialog.getBoundingClientRect();
+        const beachPickerDialog = document.querySelector('#beach-picker-dialog');
+        const beachPickerTriggers = [...document.querySelectorAll('[data-open-beach-picker]')];
+        if (beachPickerDialog && beachPickerTriggers.length) {
+            const closeBeachPickerButton = beachPickerDialog.querySelector('[data-close-beach-picker]');
+            const beachSearchInput = beachPickerDialog.querySelector('#beach-search-input');
+            const beachResults = beachPickerDialog.querySelector('#beach-search-results');
+            const beachResultItems = [...beachPickerDialog.querySelectorAll('[data-beach-search-result]')];
+            const beachSearchPrompt = beachPickerDialog.querySelector('[data-beach-search-prompt]');
+            const beachSearchStatus = beachPickerDialog.querySelector('[data-beach-search-status]');
+            const beachSearchEmpty = beachPickerDialog.querySelector('[data-beach-search-empty]');
+            const firstAreaLink = beachPickerDialog.querySelector('.beach-picker-areas a');
+            let lastBeachPickerTrigger;
+
+            function updateBeachResults() {
+                const query = beachSearchInput.value.trim().toLocaleLowerCase();
+                let matchCount = 0;
+
+                for (const item of beachResultItems) {
+                    const matches = query && item.dataset.searchText.toLocaleLowerCase().includes(query);
+                    item.hidden = !matches;
+                    if (matches) matchCount++;
+                }
+
+                beachResults.hidden = !query || matchCount === 0;
+                beachSearchPrompt.hidden = Boolean(query);
+                beachSearchStatus.hidden = !query;
+                beachSearchStatus.textContent = `${matchCount} matching ${matchCount === 1 ? 'beach' : 'beaches'}`;
+                beachSearchEmpty.hidden = !query || matchCount > 0;
+            }
+
+            for (const trigger of beachPickerTriggers) {
+                trigger.addEventListener('click', () => {
+                    lastBeachPickerTrigger = trigger;
+                    beachPickerDialog.showModal();
+                    if (trigger.dataset.pickerFocus === 'search') beachSearchInput.focus();
+                    else firstAreaLink?.focus();
+                });
+            }
+
+            closeBeachPickerButton.addEventListener('click', () => beachPickerDialog.close());
+            beachPickerDialog.addEventListener('click', event => {
+                const bounds = beachPickerDialog.getBoundingClientRect();
                 const outsideDialog = event.clientX < bounds.left || event.clientX > bounds.right
                     || event.clientY < bounds.top || event.clientY > bounds.bottom;
-                if (outsideDialog) areasDialog.close();
+                if (outsideDialog) beachPickerDialog.close();
             });
-            areasDialog.addEventListener('close', () => openAreasDialogButton.focus());
+            beachPickerDialog.addEventListener('close', () => lastBeachPickerTrigger?.focus());
+            beachSearchInput.addEventListener('input', updateBeachResults);
+            beachSearchInput.addEventListener('keydown', event => {
+                if (event.key !== 'ArrowDown') return;
+                const firstVisibleLink = beachResultItems.find(item => !item.hidden)?.querySelector('a');
+                if (!firstVisibleLink) return;
+                event.preventDefault();
+                firstVisibleLink.focus();
+            });
+
+            updateBeachResults();
         }
 
         document.addEventListener('click', async event => {
@@ -555,68 +675,6 @@
 
             feedback.textContent = copied ? 'Subscription link copied.' : 'Could not copy link. Please try again.';
         });
-
-        const beachSearch = document.querySelector('[data-beach-search]');
-        if (beachSearch) {
-            const searchInput = beachSearch.querySelector('input[type="search"]');
-            const resultsPanel = beachSearch.querySelector('.beach-search-results');
-            const resultItems = [...beachSearch.querySelectorAll('[data-beach-search-result]')];
-            const status = beachSearch.querySelector('[data-beach-search-status]');
-            const emptyState = beachSearch.querySelector('[data-beach-search-empty]');
-            let searchOpen = false;
-
-            function updateBeachResults() {
-                const query = searchInput.value.trim().toLocaleLowerCase();
-                let matchCount = 0;
-
-                for (const item of resultItems) {
-                    const matches = !query || item.dataset.searchText.toLocaleLowerCase().includes(query);
-                    item.hidden = !matches;
-                    if (matches) matchCount++;
-                }
-
-                resultsPanel.hidden = !searchOpen;
-                searchInput.setAttribute('aria-expanded', String(searchOpen));
-                status.textContent = query ? `${matchCount} matching beaches` : `${matchCount} beaches`;
-                emptyState.hidden = !searchOpen || matchCount > 0;
-            }
-
-            searchInput.addEventListener('focus', () => {
-                searchOpen = true;
-                updateBeachResults();
-            });
-            searchInput.addEventListener('input', updateBeachResults);
-
-            document.addEventListener('pointerdown', event => {
-                if (!beachSearch.contains(event.target)) {
-                    searchOpen = false;
-                    updateBeachResults();
-                }
-            });
-
-            beachSearch.addEventListener('keydown', event => {
-                if (event.key === 'Escape') {
-                    searchOpen = false;
-                    updateBeachResults();
-                    searchInput.focus();
-                    return;
-                }
-
-                if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
-                const links = resultItems.filter(item => !item.hidden).map(item => item.querySelector('a'));
-                if (!links.length) return;
-
-                const currentIndex = links.indexOf(document.activeElement);
-                const nextIndex = event.key === 'ArrowDown'
-                    ? Math.min(currentIndex + 1, links.length - 1)
-                    : currentIndex <= 0 ? -1 : currentIndex - 1;
-                event.preventDefault();
-                if (nextIndex < 0) searchInput.focus();
-                else links[nextIndex].focus();
-            });
-
-            updateBeachResults();
-        }
 
         // Navbar glass adjustment on scroll
         window.addEventListener('scroll', () => {
