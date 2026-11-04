@@ -176,14 +176,14 @@ const locationsData = {
       blueFlagSourceUrl: "https://www.visitcyprus.com/discover-cyprus/sun-sea/beaches/laourou-beach-blue-flag/",
       lifeguardSeason: "April-October",
       photo: commonsPhoto(
-        "coral-bay.jpg",
-        "Flickr - ronsaunders47 - CORAL BAY. PAPHOS CYPRUS.",
-        "Nearby Coral Bay on the Peyia coast; regional reference photo, not Laourou Beach",
-        "Ronald Saunders",
-        "CC BY-SA 2.0",
-        "https://creativecommons.org/licenses/by-sa/2.0/",
-        "https://commons.wikimedia.org/wiki/File:Flickr_-_ronsaunders47_-_CORAL_BAY._PAPHOS_CYPRUS.jpg",
-        "Nearby Coral Bay, used as a regional Peyia coastline reference; this is not a photo of Laourou Beach."
+        "laourou-beach.jpg",
+        "Coral beach hotel paphos",
+        "Rocky shoreline and clear water near Laourou Beach in Peyia",
+        "davymacc",
+        "CC BY-SA 3.0",
+        "https://creativecommons.org/licenses/by-sa/3.0/",
+        "https://commons.wikimedia.org/wiki/File:Coral_beach_hotel_paphos_-_panoramio.jpg",
+        "Nearby Coral Beach Hotel shoreline, about 200 m southeast; a local coastline reference, not a confirmed photo of Laourou Beach."
       ),
       openMeteoLat: 34.85773252605116,
       openMeteoLng: 32.36083934767451,
