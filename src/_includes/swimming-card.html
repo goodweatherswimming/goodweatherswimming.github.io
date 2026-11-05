@@ -1,0 +1,32 @@
+<div class="flex flex-col">
+    <article class="swimming-card relative flex flex-1 flex-col rounded-lg border border-sand-border bg-white shadow-sm transition-shadow hover:shadow-md">
+        <figure>
+        <img src="{% if card.map %}{{ card.map.src }}{% else %}{{ card.photo.src }}{% endif %}"
+            alt="{% if card.map %}{{ card.map.alt }}{% else %}{{ card.photo.alt }}{% endif %}"
+            loading="lazy"
+            decoding="async"
+            class="aspect-[3/2] w-full rounded-t-lg object-cover">
+        </figure>
+        <div class="flex flex-1 flex-col p-5">
+            <h3 class="mb-2 text-xl font-bold text-primary">
+                <a href="{{ card.urlPath }}" class="swimming-card__title-link">{{ card.name }}</a>
+            </h3>
+            {% if card.region %}<p class="mb-2 text-sm text-slate-600">{{ card.region }}</p>{% endif %}
+            <p class="mb-4 text-slate-700">{{ card.description }}</p>
+            {% if card.lifeguardSeason %}<p class="mb-4 text-sm text-slate-600">Lifeguards listed: {{ card.lifeguardSeason }}</p>{% endif %}
+            <span class="btn-pink mt-auto inline-block self-start rounded-lg px-5 py-3 font-bold">
+                {% if card.map %}Explore beaches{% else %}View beach and swim forecast{% endif %}
+                <span aria-hidden="true">→</span>
+            </span>
+        </div>
+    </article>
+    <p class="px-4 pt-2 text-xs text-slate-500">
+        {% if card.map %}
+            Map of listed swimming spots. © <a class="underline" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap contributors</a>
+        {% else %}
+            {% if card.photo.caption %}<span class="mb-1 block">{{ card.photo.caption }}</span>{% endif %}
+            Photo: <a class="underline" href="{{ card.photo.sourceUrl }}" target="_blank" rel="noopener noreferrer">{{ card.photo.credit }}</a>
+            · <a class="underline" href="{{ card.photo.licenseUrl }}" target="_blank" rel="noopener noreferrer">{{ card.photo.license }}</a>
+        {% endif %}
+    </p>
+</div>

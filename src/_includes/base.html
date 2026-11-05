@@ -76,6 +76,22 @@
             transform: scale(1.05);
         }
 
+        .swimming-card__title-link::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 0.5rem;
+        }
+
+        .swimming-card__title-link:focus-visible {
+            outline: none;
+        }
+
+        .swimming-card__title-link:focus-visible::after {
+            outline: 3px solid var(--energy-pink);
+            outline-offset: 3px;
+        }
+
         .glass {
             background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(12px) saturate(180%);
