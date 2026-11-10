@@ -123,6 +123,20 @@ const locationsData = {
         longitude: 32.8023,
         zoom: 10
       }
+    },
+    {
+      id: "curacao",
+      name: "Curaçao",
+      urlPath: "/curacao/",
+      description: "A sheltered coastal swimming spot at Daaibooi on Curaçao's southern shore.",
+      region: "Curaçao",
+      map: {
+        src: "/assets/areas/curacao.jpg",
+        alt: "Map of Curaçao showing Daaibooi Beach",
+        latitude: 12.212228,
+        longitude: -69.084708,
+        zoom: 13
+      }
     }
   ],
   locations: [
@@ -318,7 +332,31 @@ const locationsData = {
       lifeguardSeason: "April-October",
       safetySourceUrl: "https://www.visitcyprus.com/discover-cyprus/sun-sea/beaches/kourion-beach-blue-flag/",
       photo: commonsPhoto("kourion-beach.jpg", "Kourion Beach Cyprus", "Kourion Beach and its coastline in Episkopi Bay", "Radosław Botev", "CC BY 3.0 PL", "https://creativecommons.org/licenses/by/3.0/pl/deed.en", "https://commons.wikimedia.org/wiki/File:Kourion_Beach_Cyprus.jpg")
-    })
+    }),
+    {
+      id: "daaibooi-beach",
+      areaId: "curacao",
+      name: "Daaibooi Beach",
+      urlPath: "/daaibooi-beach/",
+      region: "Sint Willibrordus, Curaçao",
+      coordinates: { lat: 12.212228, lng: -69.084708, zoom: 15 },
+      googleMapsEmbed: "https://www.google.com/maps?q=12.212228,-69.084708&z=15&output=embed",
+      description: "A sheltered sandy bay on Curaçao's southern coast, with clear water and rocky edges.",
+      photo: commonsPhoto(
+        "daaibooi-beach.jpeg",
+        "Beach of Daaibooi, Curacao",
+        "Sandy shore and clear water at Daaibooi Beach in Curaçao",
+        "Hobie Reacher",
+        "CC BY-SA 4.0",
+        "https://creativecommons.org/licenses/by-sa/4.0/",
+        "https://commons.wikimedia.org/wiki/File:Beach_of_Daaibooi,_Curacao.jpeg"
+      ),
+      meetingNotes: "Use the public beach access and check local conditions before entering the water.",
+      openMeteoLat: 12.212228,
+      openMeteoLng: -69.084708,
+      weatherDataUrl: openMeteoWeatherUrl(12.212228, -69.084708),
+      dataCacheExpiryMinutes: 30
+    }
   ]
 };
 

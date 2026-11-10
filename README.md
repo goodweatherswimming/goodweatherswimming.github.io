@@ -108,10 +108,10 @@ Edit the meeting notes, WhatsApp group links, and other location-specific detail
 
 Each area page and home-page area card uses a generated map image. The generator reads area centers and swimming-spot coordinates from `src/_data/locations.js`; it is not run by the normal site build.
 
-After adding an area or changing its map center or swimming locations, regenerate the images manually:
+Map generation requires Python 3. After adding an area or changing its map center or swimming locations, install Pillow and regenerate the images:
 
 ```bash
-python3 -m pip install -r scripts/requirements-area-maps.txt
+npm run setup:area-maps
 python3 scripts/generate-area-maps.py
 ```
 
