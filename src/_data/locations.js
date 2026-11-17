@@ -360,11 +360,16 @@ const locationsData = {
   ]
 };
 
+const areaTimeZones = {
+  curacao: 'America/Curacao'
+};
+
 const areasById = new Map(locationsData.areas.map(area => [area.id, area]));
 locationsData.locations = locationsData.locations.map(location => {
   const area = areasById.get(location.areaId);
   return {
     ...location,
+    timeZone: areaTimeZones[location.areaId],
     areaName: area?.name,
     areaWhatsAppGroup: area?.whatsappGroup
   };

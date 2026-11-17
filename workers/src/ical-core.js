@@ -5,7 +5,7 @@ const ICAL = require('ical.js');
 
 ICAL.foldLength = 73;
 
-const LOCATION_TIME_ZONE = 'Asia/Nicosia';
+const DEFAULT_TIME_ZONE = 'Asia/Nicosia';
 const WEATHER_REQUEST_INTERVAL_MS = 2_000;
 const WEATHER_REQUEST_TIMEOUT_MS = 10_000;
 const WEATHER_MAX_ATTEMPTS = 2;
@@ -113,9 +113,9 @@ function hourlyValue(hourly, index, field) {
   return Number.isFinite(value) ? value : null;
 }
 
-function formatLocalTime(utcDateTime) {
+function formatLocalTime(utcDateTime, timeZone = DEFAULT_TIME_ZONE) {
   return new Intl.DateTimeFormat('en-GB', {
-    timeZone: LOCATION_TIME_ZONE,
+    timeZone,
     hour: '2-digit',
     minute: '2-digit',
     hourCycle: 'h23'
@@ -278,7 +278,7 @@ function createSwimEvent(location, window) {
     }
 
     return findings.length
-      ? [formatLocalTime(sample.start), ...findings.map(finding => `- ${finding}`)].join('\n')
+      ? [formatLocalTime(sample.start, location.timeZone ?? DEFAULT_TIME_ZONE), ...findings.map(finding => `- ${finding}`)].join('\n')
       : null;
   }).filter(Boolean);
   const windowFindings = [
