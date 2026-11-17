@@ -2,3 +2,6 @@ name = "goodweatherswimmingical"
 main = "src/index.js"
 compatibility_date = "2026-01-01"
 account_id = "f3e17cd24bdd54b82b75670f1264e9dd"
+
+[cache]
+enabled = true

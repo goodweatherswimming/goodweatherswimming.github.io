@@ -5,7 +5,7 @@ import { generateICSForLocation } from './ical-core.js';
 import locationsData from '../../src/_data/locations.js';
 
 const LOCATIONS_BY_ID = new Map(locationsData.locations.map(location => [location.id, location]));
-const CACHE_TTL_SECONDS = 30 * 60; // 30 minutes
+const CACHE_TTL_SECONDS = 6 * 60 * 60; // 6 hours
 
 export default {
   async fetch(request) {
@@ -30,7 +30,7 @@ export default {
         headers: {
           'Content-Type': 'text/calendar; charset=utf-8',
           'Content-Disposition': `inline; filename="${location.id}.ics"`,
-          'Cache-Control': `public, max-age=${CACHE_TTL_SECONDS}`,
+          'Cache-Control': `public, max-age=${CACHE_TTL_SECONDS}, stale-while-revalidate=3600, stale-if-error=86400`,
           'Access-Control-Allow-Origin': '*'
         }
       });
