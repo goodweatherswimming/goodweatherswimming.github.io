@@ -364,12 +364,14 @@ const areaTimeZones = {
   curacao: 'America/Curacao'
 };
 
+const DEFAULT_TIMEZONE = 'Asia/Nicosia';
+
 const areasById = new Map(locationsData.areas.map(area => [area.id, area]));
 locationsData.locations = locationsData.locations.map(location => {
   const area = areasById.get(location.areaId);
   return {
     ...location,
-    timeZone: areaTimeZones[location.areaId],
+    timeZone: areaTimeZones[location.areaId] || DEFAULT_TIMEZONE,
     areaName: area?.name,
     areaWhatsAppGroup: area?.whatsappGroup
   };
