@@ -6,9 +6,6 @@ on:
   pull_request:
     branches: [ main ]
   workflow_dispatch:
-  schedule:
-    - cron: "0 3 * * *"
-    - cron: "0 14 * * *"
 
 permissions:
   contents: read
@@ -36,11 +33,16 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Generate iCal files
-        run: node scripts/generate-ical.js
-
       - name: Build site
         run: npm run build
+
+      - name: Deploy Worker
+        if: github.ref == 'refs/heads/main'
+        run: |
+          cd workers
+          export CLOUDFLARE_API_TOKEN="${{ secrets.CLOUDFLARE_API_TOKEN }}"
+          export CLOUDFLARE_ACCOUNT_ID="${{ secrets.CLOUDFLARE_ACCOUNT_ID }}"
+          npx wrangler deploy
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v5

@@ -1,0 +1,25 @@
+{
+  "name": "goodweatherswimming-ical-worker",
+  "version": "1.0.0",
+  "description": "Cloudflare Worker for on-demand ICS calendar generation",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "deploy:preview": "wrangler deploy --preview"
+  },
+  "keywords": [
+    "cloudflare",
+    "worker",
+    "ics",
+    "calendar"
+  ],
+  "author": "Good Weather Swimming",
+  "license": "MIT",
+  "dependencies": {
+    "ical.js": "^2.2.1"
+  },
+  "devDependencies": {
+    "wrangler": "^4.164.0"
+  }
+}

@@ -142,7 +142,34 @@ npm run build
 - **Nunjucks**: Templating engine
 - **Tailwind CSS**: Utility-first CSS framework
 - **GitHub Pages**: Free hosting
+- **Cloudflare Workers**: On-demand .ics calendar generation
 - **GitHub Actions**: CI/CD automation
+
+## iCal Calendars (Cloudflare Workers)
+
+Swim calendars (.ics files) are generated on demand by a Cloudflare Worker instead of being pre-generated during the site build.
+
+- **Worker source**: `workers/src/index.js`
+- **Worker config**: `workers/wrangler.toml`
+- **Endpoint**: `https://goodweatherswimmingical.workers.dev/ical/<location-id>.ics`
+
+### Deploy the Worker
+
+```bash
+cd workers
+npm install
+npx wrangler deploy
+```
+
+### Local Development
+
+```bash
+cd workers
+npm install
+npm run dev
+```
+
+The worker fetches live weather data from Open-Meteo and returns a generated .ics calendar for the requested beach location. Templates link to this endpoint instead of static .ics files.
 
 ## Customization
 

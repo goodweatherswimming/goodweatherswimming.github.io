@@ -1,6 +1,9 @@
 node_modules/
 _site/
-src/ical/*.ics
 .DS_Store
 .env
 *.log
+
+# Worker build artifacts
+workers/.wrangler/
+workers/dist/
