@@ -4,6 +4,9 @@ _site/
 .env
 *.log
 
+# Locally generated ICS files (Cloudflare Worker is the source of truth)
+src/ical/
+
 # Worker build artifacts
 workers/.wrangler/
 workers/dist/

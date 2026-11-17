@@ -3,10 +3,14 @@
   "version": "1.0.0",
   "description": "Cloudflare Worker for on-demand ICS calendar generation",
   "main": "src/index.js",
+  "bin": {
+    "gws-generate-ics": "bin/generate-ics.js"
+  },
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
-    "deploy:preview": "wrangler deploy --preview"
+    "deploy:preview": "wrangler deploy --preview",
+    "generate:ics": "node bin/generate-ics.js"
   },
   "keywords": [
     "cloudflare",
